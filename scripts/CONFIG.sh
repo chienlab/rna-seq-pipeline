@@ -28,6 +28,21 @@ patient_vcf_dir="${output_dir}/vcf-per-patient"
 workflow_vcf_dir="${output_dir}/vcf-per-workflow"
 
 #-------------------------------------------------------------------------------
+# REFERENCE FILES
+#-------------------------------------------------------------------------------
+
+ref_dir="/genomics/jchien/refs/hg19"
+
+# For STAR mapping, mapping refinement, variant calling, & SNPiR variant filtering
+ref_genome_fasta="${ref_dir}/ucsc.hg19.fasta"
+ref_genome_annotations="${ref_dir}/ucsc.hg19.annotations.gtf"
+
+# For mapping refinement & variant calling
+known_mills_indel_vcf="${ref_dir}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
+known_1kg_indel_vcf="${ref_dir}/1000G_phase1.indels.hg19.sites.vcf"
+known_snp_vcf="${ref_dir}/dbsnp_138.hg19.vcf"
+
+#-------------------------------------------------------------------------------
 # TOOLS
 #-------------------------------------------------------------------------------
 
@@ -61,21 +76,6 @@ bcftools="${jchien_bin_dir}/bcftools-1.3.1/bcftools"
 
 # For annotating VCF files
 table_annovar="${jchien_bin_dir}/annovar/table_annovar.pl"
-
-#-------------------------------------------------------------------------------
-# REFERENCE FILES
-#-------------------------------------------------------------------------------
-
-ref_dir="/genomics/jchien/refs/hg19"
-
-# For STAR mapping, mapping refinement, variant calling, & SNPiR variant filtering
-ref_genome_fasta="${ref_dir}/ucsc.hg19.fasta"
-ref_genome_annotations="${ref_dir}/ucsc.hg19.annotations.gtf"
-
-# For mapping refinement & variant calling
-known_mills_indel_vcf="${ref_dir}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
-known_1kg_indel_vcf="${ref_dir}/1000G_phase1.indels.hg19.sites.vcf"
-known_snp_vcf="${ref_dir}/dbsnp_138.hg19.vcf"
 
 
 
