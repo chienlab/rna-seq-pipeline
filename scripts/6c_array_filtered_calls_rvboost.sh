@@ -75,16 +75,16 @@ filtered_path="$output_prefix.ug.rvboost.filtered.vcf"
 awk_filter_script='{
     OFS = "\t"
 
+    # Print header lines
+    if ($0 ~ /^#/) {
+        print $0
+        next
+    }
+
     field_count = split($8, info_fields, ";")
 
+    # Print variants that satisfy the minimum QScore
     for (i = 1; i <= field_count; ++i) {
-        # Print header lines
-        if ($0 ~ /^#/) {
-            print $0
-            next
-        }
-
-        # Print variants that satisfy the minimum QScore
         split(info_fields[i], field, "=")
         field_key = field[1]
         field_val = field[2]
