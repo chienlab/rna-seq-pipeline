@@ -40,6 +40,10 @@ output_rvboost_dir="$output_dir/$sample_dir/unifiedgenotyper/rvboost"
 echo "Output Directory:  $output_rvboost_dir"
 mkdir -p "$output_rvboost_dir"
 
+# ------------------------------------------------------------------------------
+# Call variants & rank them by confidence (add annotations: OrgScore, QScore)
+# ------------------------------------------------------------------------------
+
 echo "RVboost - Calling & filtering variants"
 "$rvboost_dir/src/RV.Boosting.sh" \
     -R "$input_bam" \
@@ -48,6 +52,52 @@ echo "RVboost - Calling & filtering variants"
     -o "$output_rvboost_dir" \
     -T 6
 
-# Rename output files to be consistent with other workflows
-mv $output_rvboost_dir/$sample_id.{,ug.}raw.vcf
-mv $output_rvboost_dir/$sample_id.{filter,ug.rvboost.filtered}.vcf
+# ------------------------------------------------------------------------------
+# Rename output files to be more consistent with the GATK & SNPiR workflows
+# ------------------------------------------------------------------------------
+
+output_prefix="$output_rvboost_dir/$sample_id"
+default_raw_path="$output_prefix.raw.vcf"
+renamed_raw_path="$output_prefix.ug.raw.vcf"
+default_scored_path"$output_prefix.filter.vcf"
+renamed_scored_path"$output_prefix.ug.rvboost.scored.vcf"
+mv "$default_raw_path" "$renamed_raw_path"
+mv "$default_scored_path" "$renamed_scored_path"
+
+# ------------------------------------------------------------------------------
+# Filter variants by QScore
+# ------------------------------------------------------------------------------
+
+min_qscore=0.05
+echo "Filtering variants with RVboost QScore < $min_qscore"
+filtered_path="$output_prefix.ug.rvboost.filtered.vcf"
+
+awk_filter_script='{
+    OFS = "\t"
+
+    field_count = split($8, info_fields, ";")
+
+    for (i = 1; i <= field_count; ++i) {
+        # Print header lines
+        if ($0 ~ /^#/) {
+            print $0
+            next
+        }
+
+        # Print variants that satisfy the minimum QScore
+        split(info_fields[i], field, "=")
+        field_key = field[1]
+        field_val = field[2]
+        if (field_key == "QScore") {
+            if (field_val >= awk_min_qscore)
+                print $0
+            next
+        }
+    }
+}'
+
+awk \
+    -v awk_min_qscore=$min_qscore \
+    "$awk_filter_script" \
+    "$renamed_scored_path" \
+    > "$filtered_path"
