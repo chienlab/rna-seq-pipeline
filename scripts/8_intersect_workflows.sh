@@ -86,4 +86,4 @@ mv "$output_intersect_dir"/{0000,unique_gatk}.vcf
 mv "$output_intersect_dir"/{0001,unique_snpir}.vcf
 mv "$output_intersect_dir"/{0002,unique_rvboost}.vcf
 
-rm -f "$gatk_vcf_gz"* "$snpir_vcf_gz"* "$rvboost_vcf_gz"* "README.txt"
+rm -f "$gatk_vcf_gz"* "$snpir_vcf_gz"* "$rvboost_vcf_gz"* "$output_intersect_dir/README.txt"
