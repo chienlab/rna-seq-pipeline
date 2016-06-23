@@ -38,7 +38,7 @@ function annotate_vcf {
 
     echo "Annotating VCF: $input_vcf"
 
-    "$annovar_dir/table_annovar.pl" \
+    "$table_annovar" \
         -vcfinput "$input_vcf" \
         "$annovar_dir/humandb/" \
         -buildver hg19 \
