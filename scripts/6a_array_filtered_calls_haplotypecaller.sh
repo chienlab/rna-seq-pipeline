@@ -22,7 +22,7 @@ INPUT:
   Config file at <current directory>/CONFIG.sh
   BAM file(s) at <dataset_dir>/<sample dir>/refined-mapping/<sample>.refined.bam
   Reference genome at <ref_genome_fasta>
-  Known variant list at <known_snp_vcf>
+  Known variant list at <known_dbsnp_vcf>
 OUTPUT:
   VCF files in <output_dir>/<sample dir>/haplotypecaller"
 
@@ -37,7 +37,7 @@ fi
 source "$PBS_O_WORKDIR/CONFIG.sh"
 
 echo "Reference genome FASTA:  $ref_genome_fasta"
-echo "Known SNPs:  $known_snp_vcf"
+echo "Known SNPs:  $known_dbsnp_vcf"
 
 sample_dir=$(echo "$sample_dir_list" | head -$PBS_ARRAYID | tail -1)
 sample_id=$(echo "$sample_list" | head -$PBS_ARRAYID | tail -1)
@@ -56,13 +56,13 @@ mkdir -p "$output_haplotypecaller_dir"
 raw_vcf="$output_haplotypecaller_dir/$sample_id.hc.raw.vcf"
 
 echo "GATK HaplotypeCaller - Calling raw variants"
-java -Xmx16g -jar "$gatk_jar" -T HaplotypeCaller \
+"$java" -Xmx16g -jar "$gatk_jar" -T HaplotypeCaller \
     -R "$ref_genome_fasta" \
     -I "$input_bam" \
     -dontUseSoftClippedBases \
     -stand_call_conf 20.0 \
     -stand_emit_conf 20.0 \
-    --dbsnp "$known_snp_vcf" \
+    --dbsnp "$known_dbsnp_vcf" \
     -o "$raw_vcf" \
     -nct 12
 
@@ -73,7 +73,7 @@ java -Xmx16g -jar "$gatk_jar" -T HaplotypeCaller \
 echo "GATK VariantFiltration - Filtering clusters of 3+ SNPs within a 35bp window & filtering FS > 30, QD < 2"
 filtered_phase_1="$output_haplotypecaller_dir/1_filtered_gatk.vcf"
 
-java -Xmx8g -jar "$gatk_jar" -T VariantFiltration \
+"$java" -Xmx8g -jar "$gatk_jar" -T VariantFiltration \
     -R "$ref_genome_fasta" \
     -V "$raw_vcf" \
     -window 35 \

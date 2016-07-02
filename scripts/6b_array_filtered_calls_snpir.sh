@@ -22,7 +22,7 @@ INPUT:
   Config file at <current directory>/CONFIG.sh
   BAM file(s) at <dataset_dir>/<sample dir>/refined-mapping/<sample>.refined.bam
   Reference genome at <ref_genome_fasta>
-  Known variant list at <known_snp_vcf>
+  Known variant list at <known_dbsnp_vcf>
 OUTPUT:
   VCF files in <output_dir>/<sample dir>/unifiedgenotyper/snpir"
 
@@ -37,7 +37,7 @@ fi
 source "$PBS_O_WORKDIR/CONFIG.sh"
 
 echo "Reference genome FASTA:  $ref_genome_fasta"
-echo "Known SNPs:  $known_snp_vcf"
+echo "Known SNPs:  $known_dbsnp_vcf"
 
 sample_dir=$(echo "$sample_dir_list" | head -$PBS_ARRAYID | tail -1)
 sample_id=$(echo "$sample_list" | head -$PBS_ARRAYID | tail -1)
@@ -56,13 +56,13 @@ mkdir -p "$output_unifiedgenotyper_dir"
 raw_vcf="$output_unifiedgenotyper_dir/$sample_id.ug.raw.vcf"
 
 echo "GATK UnifiedGenotyper - Calling raw variants"
-java -Xmx16g -jar "$gatk_jar" -T UnifiedGenotyper \
+"$java" -Xmx16g -jar "$gatk_jar" -T UnifiedGenotyper \
     -R "$ref_genome_fasta" \
     -I "$input_bam" \
     -glm SNP \
     -stand_call_conf 0 \
     -stand_emit_conf 0 \
-    --dbsnp "$known_snp_vcf" \
+    --dbsnp "$known_dbsnp_vcf" \
     -o "$raw_vcf" \
     -nct 12
 

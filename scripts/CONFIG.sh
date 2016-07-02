@@ -20,7 +20,7 @@ fastq_read_length=100
 output_dir="${dataset_dir}"
 
 # For STAR mapping
-star_index_dir="/scratch/jchien/ssuenaga/ucsc-hg19-100bp-STAR-index"
+star_index_dir="/genomics/jchien/refs/GRCh37-gencode-100bp-star2.5.2a"
 
 # For VCF merging
 sample_vcf_dir="${output_dir}/vcf-per-sample"
@@ -31,16 +31,18 @@ workflow_vcf_dir="${output_dir}/vcf-per-workflow"
 # REFERENCE FILES
 #-------------------------------------------------------------------------------
 
-ref_dir="/genomics/jchien/refs/hg19"
+ref_dir="/genomics/jchien/refs/"
 
 # For STAR mapping, mapping refinement, variant calling, & SNPiR variant filtering
-ref_genome_fasta="${ref_dir}/ucsc.hg19.fasta"
-ref_genome_annotations="${ref_dir}/ucsc.hg19.annotations.gtf"
+ref_genome_fasta="${ref_dir}/GRCh37.p13.genome.fa"
+ref_genome_annotations="${ref_dir}/gencode.v19.chr_patch_hap1_scaff.annotation.gtf"
 
-# For mapping refinement & variant calling
-known_mills_indel_vcf="${ref_dir}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
-known_1kg_indel_vcf="${ref_dir}/1000G_phase1.indels.hg19.sites.vcf"
-known_snp_vcf="${ref_dir}/dbsnp_138.hg19.vcf"
+# For mapping refinement (indel realignment, base recalibration)
+known_mills_indel_vcf="${ref_dir}/b37/Mills_and_1000G_gold_standard.indels.b37.sites.vcf"
+known_1kg_indel_vcf="${ref_dir}/b37/1000G_phase1.indels.b37.vcf"
+
+# For mapping refinement (base recalibration) & variant calling
+known_dbsnp_vcf="${ref_dir}/b37/dbsnp_138.b37.vcf"
 
 #-------------------------------------------------------------------------------
 # TOOLS
@@ -53,14 +55,15 @@ jchien_bin_dir="/genomics/jchien/analyse_bin"
 biobambam2_bamtofastq="${tools_dir}/biobambam2/2.0.16/bin/bamtofastq"
 
 # For STAR mapping
-star="${tools_dir}/star/2.4.2a/STAR"
+star="${jchien_bin_dir}/STAR-2.5.2a/bin/Linux_x86_64/STAR"
 
 # For mapping refinement (GATK best practices)
-picard_jar="${tools_dir}/picard-tools/1.140/picard.jar"
+java="${tools_dir}/java/jdk1.8.0_66/bin/java"
 java_tmp_dir="/scratch/jchien/ssuenaga/javaTmp"
+picard_jar="${jchien_bin_dir}/picard-tools-2.5.0/picard.jar"
 
 # For mapping refinement, variant calling, & GATK variant filtering
-gatk_jar="${tools_dir}/gatk/3.4-46/GenomeAnalysisTK.jar"
+gatk_jar="${jchien_bin_dir}/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar"
 
 # For RVboost & SNPiR variant filtering
 rvboost_dir="${tools_dir}/rvboost/0.1"
