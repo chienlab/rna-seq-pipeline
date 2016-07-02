@@ -81,6 +81,29 @@ deduped_bai="$output_sample_dir/reads_deduped.bai"
 rm -f "$grouped_sorted_bam"
 
 #-------------------------------------------------------------------------------
+# Generate reference genome dictionary & index if they don't exist
+# http://gatkforums.broadinstitute.org/gatk/discussion/1601/how-can-i-prepare-a-fasta-file-to-use-as-reference
+#-------------------------------------------------------------------------------
+
+# To match the file names expected by GATK:
+# Use shell parameter expansion to remove fasta extension & replace with .dict.
+# Simply append .fai for the index (don't replace fasta extension).
+ref_genome_dict=${ref_genome_fasta%.*}.dict
+ref_genome_index="$ref_genome_fasta.fai"
+
+if [ ! -e "$ref_genome_dict" ]; then
+    echo "Picard CreateSequenceDictionary - Generating dictionary file for reference genome FASTA"
+    "$java" \
+        -d64 -Xmx8g -jar "$picard_jar" CreateSequenceDictionary \
+        R="$ref_genome_fasta" \
+        O="$ref_genome_dict"
+fi
+if [ ! -e "$ref_genome_index" ]; then
+    echo "SAMtools faidx - Generating index file for reference genome FASTA"
+    "$samtools" faidx "$ref_genome_fasta"
+fi
+
+#-------------------------------------------------------------------------------
 # Refine with GATK
 #-------------------------------------------------------------------------------
 

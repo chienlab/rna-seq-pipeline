@@ -57,6 +57,9 @@ biobambam2_bamtofastq="${tools_dir}/biobambam2/2.0.16/bin/bamtofastq"
 # For STAR mapping
 star="${jchien_bin_dir}/STAR-2.5.2a/bin/Linux_x86_64/STAR"
 
+# For ref genome dictionary & index generation (if they don't already exist)
+samtools="${tools_dir}/samtools/1.2/samtools"
+
 # For mapping refinement (GATK best practices)
 java="${tools_dir}/java/jdk1.8.0_66/bin/java"
 java_tmp_dir="/scratch/jchien/ssuenaga/javaTmp"
