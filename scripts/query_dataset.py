@@ -2,7 +2,7 @@
 import sys
 import xml.etree.cElementTree as etree
 
-_root = None
+_tree = None
 
 def show_usage():
     print('''
@@ -20,7 +20,7 @@ siblings    sample ID     Prints sample IDs for the patient of the given sample.
     exit(1)
 
 def main():
-    global _root
+    global _tree
 
     arg_count = len(sys.argv) - 1
     if arg_count < 2 or 3 < arg_count:
@@ -30,7 +30,7 @@ def main():
     query_arg = sys.argv[2] if arg_count > 2 else ''
     list_file = sys.argv[-1]
 
-    _root = etree.parse(list_file)
+    _tree = etree.parse(list_file)
 
     if query_name == 'patients':
         print_all_patients()
@@ -153,12 +153,10 @@ def get_patient_for_sample(sample_id):
     return None
 
 def get_patient_nodes():
-    global _root
-    return _root.findall('.//patient')
+    return _tree.findall('.//group')
 
 def get_sample_nodes():
-    global _root
-    return _root.findall('.//sample')
+    return _tree.findall('.//sample')
 
 if __name__ == '__main__':
     main()
