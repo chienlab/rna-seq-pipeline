@@ -10,6 +10,7 @@ Usage:
 ./query_dataset.py QUERY [ARGUMENT] DATASET.xml
 
 QUERY       ARGUMENT        RESULT
+dataset     None            ID of the dataset
 groups      none            IDs of all groups of samples or pairs
 group       sample/pair ID  ID of the given sample's group
 samples     [group ID]      Sample IDs (all or just in a given group)
@@ -32,6 +33,8 @@ def main():
 
     _tree = etree.parse(list_file)
 
+    if query_name == 'dataset':
+        print(_tree.getroot().attrib['id'])
 
     elif query_name == 'groups':
         print_all_groups()
