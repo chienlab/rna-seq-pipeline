@@ -6,14 +6,14 @@ set -e  # Enable flag to exit when any command fails
 if [[ $# -gt 0 ]]; then
     echo \
 "DESCRIPTION:
-  Annotates patient & workflow VCFs.
+  Annotates group & workflow VCFs.
   This step is done once for an entire dataset of samples.
 TOOLS:
   Annovar
 INPUT:
   Config file at <current directory>/CONFIG.sh
   VCF files in
-    <patient_vcf_dir>/gatk  <patient_vcf_dir>/snpir  <patient_vcf_dir>/rvboost
+    <group_vcf_dir>/gatk  <group_vcf_dir>/snpir  <group_vcf_dir>/rvboost
     <workflow_vcf_dir>
 OUTPUT:
   VCF files in the input directories"
@@ -52,12 +52,12 @@ function annotate_vcf {
 # ------------------------------------------------------------------------------
 
 workflow_names="gatk snpir rvboost"
-patient_ids=$("$query_dataset_script" patients "$dataset_xml")
+group_ids=$("$query_dataset_script" groups "$dataset_xml")
 
 for workflow_name in $workflow_names; do
     annotate_vcf "$workflow_vcf_dir/$workflow_name.merged.vcf"
 
-    for patient_id in $patient_ids; do
-        annotate_vcf "$patient_vcf_dir/$workflow_name/$patient_id.merged.vcf"
+    for group_id in $group_ids; do
+        annotate_vcf "$group_vcf_dir/$workflow_name/$group_id.merged.vcf"
     done
 done
