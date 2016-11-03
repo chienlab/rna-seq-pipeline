@@ -20,7 +20,7 @@ fastq_read_length=100
 output_dir="${dataset_dir}"
 
 # For STAR mapping
-star_index_dir="/genomics/jchien/refs/GRCh37-gencode-100bp-star2.5.2a"
+star_index_dir="/genomics/jchien/refs/hg19/ucsc-hg19-75bp-star2.5.2a"
 
 # For VCF merging
 sample_vcf_dir="${output_dir}/vcf-per-sample"
@@ -31,18 +31,18 @@ workflow_vcf_dir="${output_dir}/vcf-per-workflow"
 # REFERENCE FILES
 #-------------------------------------------------------------------------------
 
-ref_dir="/genomics/jchien/refs/"
+ref_dir="/genomics/jchien/refs"
 
 # For STAR mapping, mapping refinement, variant calling, & SNPiR variant filtering
-ref_genome_fasta="${ref_dir}/GRCh37.p13.genome.fa"
-ref_genome_annotations="${ref_dir}/gencode.v19.chr_patch_hap1_scaff.annotation.gtf"
+ref_genome_fasta="${ref_dir}/hg19/ucsc.hg19.fasta"
+ref_genome_annotations="${ref_dir}/hg19/ucsc.hg19.annotations.gtf"
 
 # For mapping refinement (indel realignment, base recalibration)
-known_mills_indel_vcf="${ref_dir}/b37/Mills_and_1000G_gold_standard.indels.b37.sites.vcf"
-known_1kg_indel_vcf="${ref_dir}/b37/1000G_phase1.indels.b37.vcf"
+known_mills_indel_vcf="${ref_dir}/hg19/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
+known_1kg_indel_vcf="${ref_dir}/hg19/1000G_phase1.indels.hg19.vcf"
 
 # For mapping refinement (base recalibration) & variant calling
-known_dbsnp_vcf="${ref_dir}/b37/dbsnp_138.b37.vcf"
+known_dbsnp_vcf="${ref_dir}/hg19/dbsnp_138.hg19.vcf"
 
 #-------------------------------------------------------------------------------
 # TOOLS
