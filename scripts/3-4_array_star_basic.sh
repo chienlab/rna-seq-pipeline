@@ -58,6 +58,15 @@ mkdir -p "$pass2_dir"
     --outFileNamePrefix "$pass2_dir/$sample_id." \
     --outSAMattributes NH HI AS nM NM MD \
     --outSAMtype BAM Unsorted \
-    --quantMode TranscriptomeSAM \
     --twopassMode Basic \
+    --outFilterType BySJout \
+    --outFilterMultimapNmax 20 \
+    --outFilterMismatchNmax 999 \
+    --outFilterMismatchNoverLmax 0.04 \
+    --alignIntronMin 20 \
+    --alignIntronMax 1000000 \
+    --alignMatesGapMax 1000000 \
+    --alignSJoverhangMin 8 \
+    --alignSJDBoverhangMin 1 \
+    --sjdbScore 1 \
     --runThreadN 10
