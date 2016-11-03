@@ -9,13 +9,13 @@ def show_usage():
 Usage:
 ./query_dataset.py QUERY [ARGUMENT] DATASET.xml
 
-QUERY       ARGUMENT      RESULT
-patients    none          Prints patient IDs.
-patient     sample ID     Prints patient ID for the given sample.
-samples     [patient ID]  Prints sample IDs (can filter by a given patient).
-sampledirs  [patient ID]  Prints sample dirs, or IDs where no dir is defined.
-sampledir   sample ID     Prints sample directory of the given sample.
-siblings    sample ID     Prints sample IDs for the patient of the given sample.
+QUERY       ARGUMENT        RESULT
+groups      none            IDs of all groups of samples or pairs
+group       sample/pair ID  ID of the given sample's group
+samples     [group ID]      Sample IDs (all or just in a given group)
+sampledirs  [group ID]      Sample dirs, or IDs where no dir is defined
+sampledir   sample ID       Sample directory of the given sample
+siblings    sample ID       Sample IDs in the same group as the given sample
     ''')
     exit(1)
 
@@ -32,24 +32,25 @@ def main():
 
     _tree = etree.parse(list_file)
 
-    if query_name == 'patients':
-        print_all_patients()
 
-    elif query_name == 'patient':
+    elif query_name == 'groups':
+        print_all_groups()
+
+    elif query_name == 'group':
         if not query_arg:
-            print('ERROR - "patient" query requires sample ID argument')
+            print('ERROR - "group" query requires sample ID argument')
             exit(1)
-        print_patient_for_sample(query_arg)
+        print_group_for_sample(query_arg)
 
     elif query_name == 'samples':
         if query_arg:
-            print_samples_for_patient(query_arg)
+            print_samples_for_group(query_arg)
         else:
             print_all_samples()
 
     elif query_name == 'sampledirs':
         if query_arg:
-            print_sample_dirs_for_patient(query_arg)
+            print_sample_dirs_for_group(query_arg)
         else:
             print_all_sample_dirs()
 
@@ -69,21 +70,21 @@ def main():
         show_usage()
 
 #----------------------------------------------
-# QUERY: patients
+# QUERY: groups
 #----------------------------------------------
 
-def print_all_patients():
-    for patient in get_patient_nodes():
-        print(patient.get('id'))
+def print_all_groups():
+    for group in get_group_nodes():
+        print(group.get('id'))
 
 #----------------------------------------------
-# QUERY: patient
+# QUERY: group
 #----------------------------------------------
 
-def print_patient_for_sample(sample_id):
-    patient = get_patient_for_sample(sample_id)
-    if patient:
-        print patient.get('id')
+def print_group_for_sample(sample_id):
+    group = get_group_for_sample(sample_id)
+    if group:
+        print group.get('id')
 
 #----------------------------------------------
 # QUERY: samples
@@ -93,8 +94,8 @@ def print_all_samples():
     for sample in get_sample_nodes():
         print(sample.get('id'))
 
-def print_samples_for_patient(patient_id):
-    for sample in get_patient(patient_id):
+def print_samples_for_group(group_id):
+    for sample in get_group(group_id):
         print(sample.get('id'))
 
 #----------------------------------------------
@@ -105,8 +106,8 @@ def print_all_sample_dirs():
     for sample in get_sample_nodes():
         print_dir_or_id(sample)
 
-def print_sample_dirs_for_patient(patient_id):
-    for sample in get_patient(patient_id):
+def print_sample_dirs_for_group(group_id):
+    for sample in get_group(group_id):
         print_dir_or_id(sample)
 
 #----------------------------------------------
@@ -124,9 +125,9 @@ def print_dir_for_sample(sample_id):
 #----------------------------------------------
 
 def print_siblings_for_sample(sample_id):
-    patient = get_patient_for_sample(sample_id)
-    if patient:
-        print_samples_for_patient(patient.get('id'))
+    group = get_group_for_sample(sample_id)
+    if group:
+        print_samples_for_group(group.get('id'))
 
 #----------------------------------------------
 # HELPERS
@@ -139,20 +140,20 @@ def print_dir_or_id(sample):
     else:
         print(sample.get('id'))
 
-def get_patient(id):
-    for patient in get_patient_nodes():
-        if patient.get('id') == id:
-            return patient
+def get_group(id):
+    for group in get_group_nodes():
+        if group.get('id') == id:
+            return group
     return []
 
-def get_patient_for_sample(sample_id):
-    for patient in get_patient_nodes():
-        for sample in patient:
+def get_group_for_sample(sample_id):
+    for group in get_group_nodes():
+        for sample in group:
             if sample.get('id') == sample_id:
-                return patient
+                return group
     return None
 
-def get_patient_nodes():
+def get_group_nodes():
     return _tree.findall('.//group')
 
 def get_sample_nodes():
