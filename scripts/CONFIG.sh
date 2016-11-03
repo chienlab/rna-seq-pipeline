@@ -3,7 +3,7 @@
 #-------------------------------------------------------------------------------
 
 # For all steps
-dataset_dir="/genomics/jchien/ssuenaga/151125_SN316_0506_AC84APACXX"
+dataset_dir="dataset"
 dataset_xml="${dataset_dir}/dataset.xml"
 
 # For STAR mapping
@@ -20,7 +20,7 @@ fastq_read_length=100
 output_dir="${dataset_dir}"
 
 # For STAR mapping
-star_index_dir="/genomics/jchien/refs/hg19/ucsc-hg19-75bp-star2.5.2a"
+star_index_dir="${ref_dir}/ucsc-hg19-75bp-star2.5.2a"
 
 # For VCF merging
 sample_vcf_dir="${output_dir}/vcf-per-sample"
@@ -31,11 +31,10 @@ workflow_vcf_dir="${output_dir}/vcf-per-workflow"
 # REFERENCE FILES
 #-------------------------------------------------------------------------------
 
-ref_dir="/genomics/jchien/refs"
+ref_dir="refs"
 
 # For STAR mapping, mapping refinement, variant calling, & SNPiR variant filtering
 ref_genome_fasta="${ref_dir}/ucsc.hg19.fasta"
-##ref_genome_annotations="${ref_dir}/ucsc.hg19.annotations.gtf"
 
 # For mapping refinement (indel realignment, base recalibration), variant calling,
 # and callset refinement (variant quality score recalibration)
@@ -47,46 +46,45 @@ known_1000g_indel_vcf="${ref_dir}/1000G_phase1.indels.hg19.sites.vcf"
 known_mills_indel_vcf="${ref_dir}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
 
 # For somatic variant calling (ContEst cross-sample contamination estimation)
-pop_frequency_vcf="/genomics/jchien/refs/hg19/hg19_population_stratified_af_hapmap_3.3.FIX.chr.vcf"
+pop_frequency_vcf="${ref_dir}/hg19_population_stratified_af_hapmap_3.3.FIX.chr.vcf"
 
 #-------------------------------------------------------------------------------
 # TOOLS
 #-------------------------------------------------------------------------------
 
-tools_dir="/tools/cluster/6.2"
-jchien_bin_dir="/genomics/jchien/analyse_bin"
+tools_dir="tools"
 
 # If starting with BAM files instead of FASTQ files
 biobambam2_bamtofastq="${tools_dir}/biobambam2/2.0.16/bin/bamtofastq"
 
 # For STAR mapping
-star="${jchien_bin_dir}/STAR-2.5.2a/bin/Linux_x86_64/STAR"
+star="${tools_dir}/STAR-2.5.2a/bin/Linux_x86_64/STAR"
 
 # For ref genome dictionary & index generation (if they don't already exist)
 samtools="${tools_dir}/samtools/1.2/samtools"
 
 # For mapping refinement (GATK best practices)
 java="${tools_dir}/java/jdk1.8.0_66/bin/java"
-java_tmp_dir="/scratch/jchien/ssuenaga/javaTmp"
-picard_jar="${jchien_bin_dir}/picard-tools-2.6.0/picard.jar"
+java_tmp_dir="java-temp"
+picard_jar="${tools_dir}/picard-tools-2.6.0/picard.jar"
 
 # For mapping refinement, variant calling, & GATK variant filtering
-gatk_jar="${jchien_bin_dir}/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar"
+gatk_jar="${tools_dir}/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar"
 
 # For RVboost & SNPiR variant filtering
 rvboost_dir="${tools_dir}/rvboost/0.1"
 snpir_dir="${tools_dir}/snpir/20140512"
-revised_snpir_dir="/genomics/jchien/scripts/rna-seq-pipeline/snpir"
+revised_snpir_dir="${tools_dir}/snpir/revisions"
 pblat="${tools_dir}/pblat/1.6/pblat"
 
 # For SNPiR variant filtering & finding concordance between VCFs
 bedtools="${tools_dir}/bedtools/2.25.0/bin/bedtools"
 
 # For merging VCF files
-bcftools="${jchien_bin_dir}/bcftools-1.3.1/bcftools"
+bcftools="${tools_dir}/bcftools-1.3.1/bcftools"
 
 # For annotating VCF files
-table_annovar="${jchien_bin_dir}/annovar/table_annovar.pl"
+table_annovar="${tools_dir}/annovar/table_annovar.pl"
 
 
 
