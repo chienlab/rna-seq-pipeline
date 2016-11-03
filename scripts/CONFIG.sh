@@ -24,7 +24,7 @@ star_index_dir="/genomics/jchien/refs/hg19/ucsc-hg19-75bp-star2.5.2a"
 
 # For VCF merging
 sample_vcf_dir="${output_dir}/vcf-per-sample"
-patient_vcf_dir="${output_dir}/vcf-per-patient"
+group_vcf_dir="${output_dir}/vcf-per-group"
 workflow_vcf_dir="${output_dir}/vcf-per-workflow"
 
 #-------------------------------------------------------------------------------
