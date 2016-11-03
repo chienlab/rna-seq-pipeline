@@ -63,7 +63,7 @@ samtools="${tools_dir}/samtools/1.2/samtools"
 # For mapping refinement (GATK best practices)
 java="${tools_dir}/java/jdk1.8.0_66/bin/java"
 java_tmp_dir="/scratch/jchien/ssuenaga/javaTmp"
-picard_jar="${jchien_bin_dir}/picard-tools-2.5.0/picard.jar"
+picard_jar="${jchien_bin_dir}/picard-tools-2.6.0/picard.jar"
 
 # For mapping refinement, variant calling, & GATK variant filtering
 gatk_jar="${jchien_bin_dir}/GenomeAnalysisTK-3.6/GenomeAnalysisTK.jar"
