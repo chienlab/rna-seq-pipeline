@@ -53,7 +53,7 @@ echo "Picard AddOrReplaceReadGroups - Adding read groups & sorting"
 grouped_sorted_bam="$output_sample_dir/reads_grouped_sorted.bam"
 
 "$java" \
-    -d64 -Xmx8g -jar "$picard_jar" AddOrReplaceReadGroups \
+    -d64 -Xmx24g -jar "$picard_jar" AddOrReplaceReadGroups \
     INPUT="$dataset_dir/$sample_dir/star-pass2/$sample_id.Aligned.out.bam" \
     OUTPUT="$grouped_sorted_bam" \
     SORT_ORDER=coordinate \
@@ -70,7 +70,7 @@ deduped_bam="$output_sample_dir/reads_deduped.bam"
 deduped_bai="$output_sample_dir/reads_deduped.bai"
 
 "$java" \
-    -d64 -Xmx8g -jar "$picard_jar" MarkDuplicates \
+    -d64 -Xmx24g -jar "$picard_jar" MarkDuplicates \
     INPUT="$grouped_sorted_bam" \
     OUTPUT="$deduped_bam" \
     CREATE_INDEX=true \
@@ -93,7 +93,7 @@ ref_genome_index="$ref_genome_fasta.fai"
 if [ ! -e "$ref_genome_dict" ]; then
     echo "Picard CreateSequenceDictionary - Generating dictionary file for reference genome FASTA"
     "$java" \
-        -d64 -Xmx8g -jar "$picard_jar" CreateSequenceDictionary \
+        -d64 -Xmx24g -jar "$picard_jar" CreateSequenceDictionary \
         R="$ref_genome_fasta" \
         O="$ref_genome_dict"
 fi
@@ -111,7 +111,7 @@ split_bam="$output_sample_dir/reads_split.bam"
 split_bai="$output_sample_dir/reads_split.bai"
 
 "$java" \
-    -d64 -Xmx8g -jar "$gatk_jar" -T SplitNCigarReads \
+    -d64 -Xmx24g -jar "$gatk_jar" -T SplitNCigarReads \
     -R "$ref_genome_fasta" \
     -I "$deduped_bam" \
     -o "$split_bam" \
@@ -127,7 +127,7 @@ echo "GATK RealignerTargetCreator - Preparing to realign around known indels/SNP
 interval_file="$output_sample_dir/realigner_target.intervals"
 
 "$java" \
-    -d64 -Xmx8g -jar "$gatk_jar" -T RealignerTargetCreator \
+    -d64 -Xmx24g -jar "$gatk_jar" -T RealignerTargetCreator \
     -I "$split_bam" \
     -R "$ref_genome_fasta" \
     -o "$interval_file" \
@@ -142,7 +142,7 @@ realigned_bai="$output_sample_dir/reads_realigned.bai"
 mkdir -p "$java_tmp_dir"
 
 "$java" \
-    -d64 -Xmx8g -Djava.io.tmpdir="$java_tmp_dir" -jar "$gatk_jar" -T IndelRealigner \
+    -d64 -Xmx24g -Djava.io.tmpdir="$java_tmp_dir" -jar "$gatk_jar" -T IndelRealigner \
     -I "$split_bam" \
     -R "$ref_genome_fasta" \
     -targetIntervals "$interval_file" \
@@ -160,7 +160,7 @@ echo "GATK BaseRecalibrator - Recalibrating base scores & generating recalibrati
 recalibration_report="$output_sample_dir/recalibration_report.grp"
 
 "$java" \
-    -d64 -Xmx8g -jar "$gatk_jar" -T BaseRecalibrator \
+    -d64 -Xmx24g -jar "$gatk_jar" -T BaseRecalibrator \
     -R "$ref_genome_fasta" \
     -I "$realigned_bam" \
     -knownSites "$known_mills_indel_vcf" \
@@ -173,7 +173,7 @@ echo "GATK BaseRecalibrator - Generating post-recalibration report"
 post_recalibration_report="$output_sample_dir/post_recalibration_report.grp"
 
 "$java" \
-    -d64 -Xmx8g -jar "$gatk_jar" -T BaseRecalibrator \
+    -d64 -Xmx24g -jar "$gatk_jar" -T BaseRecalibrator \
     -R "$ref_genome_fasta" \
     -I "$realigned_bam" \
     -knownSites "$known_mills_indel_vcf" \
@@ -191,7 +191,7 @@ module load R/3.2.3 \
     || true  # Don't abort if this non-critical step fails
 
 "$java" \
-    -d64 -Xmx8g -jar "$gatk_jar" -T AnalyzeCovariates \
+    -d64 -Xmx24g -jar "$gatk_jar" -T AnalyzeCovariates \
     -R "$ref_genome_fasta" \
     -before "$recalibration_report" \
     -after "$post_recalibration_report" \
@@ -202,7 +202,7 @@ echo "GATK PrintReads - Writing recalibrated scores to BAM"
 recalibrated_bam="$output_sample_dir/$sample_id.refined.bam"
 
 "$java" \
-   -d64 -Xmx8g -jar "$gatk_jar" -T PrintReads \
+   -d64 -Xmx24g -jar "$gatk_jar" -T PrintReads \
    -R "$ref_genome_fasta" \
    -I "$realigned_bam" \
    -BQSR "$recalibration_report" \
