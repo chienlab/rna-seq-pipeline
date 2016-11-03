@@ -1,7 +1,5 @@
 #!/bin/bash
 #PBS -l nodes=1:ppn=1,mem=1g,walltime=5:00
-#PBS -M SeijiSuenaga@gmail.com
-#PBS -m abe
 
 set -e  # Enable flag to exit when any command fails
 
