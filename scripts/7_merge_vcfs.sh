@@ -7,8 +7,8 @@ if [[ $# -gt 0 ]]; then
     echo \
 "DESCRIPTION:
   Copies each workflow's sample VCFs to a centralized directory, then uses the
-  patient-sample mapping in the dataset XML file to merge all samples per
-  patient & workflow.
+  group-sample mapping in the dataset XML file to merge all samples per group
+  and workflow.
   This step is done once for an entire dataset of samples.
 TOOLS:
   BCFtools
@@ -21,7 +21,7 @@ INPUT:
 OUTPUT:
   VCF files in
     <sample_vcf_dir>/gatk   <sample_vcf_dir>/snpir   <sample_vcf_dir>/rvboost
-    <patient_vcf_dir>/gatk  <patient_vcf_dir>/snpir  <patient_vcf_dir>/rvboost
+    <group_vcf_dir>/gatk  <group_vcf_dir>/snpir  <group_vcf_dir>/rvboost
     <workflow_vcf_dir>"
 
     # Exit with error code if unrecognized arg is given
@@ -35,14 +35,14 @@ fi
 source "$PBS_O_WORKDIR/CONFIG.sh"
 
 echo "Sample VCF Output Directory:  $sample_vcf_dir"
-echo "Patient VCF Output Directory:  $patient_vcf_dir"
+echo "Group VCF Output Directory:  $group_vcf_dir"
 echo "Workflow VCF Output Directory:  $workflow_vcf_dir"
 
 workflows_lowercase="gatk snpir rvboost"
 for workflow_name in $workflows_lowercase; do
     mkdir -p \
         "$sample_vcf_dir/$workflow_name" \
-        "$patient_vcf_dir/$workflow_name"
+        "$group_vcf_dir/$workflow_name"
 done
 mkdir -p "$workflow_vcf_dir"
 
@@ -126,23 +126,23 @@ function merge_vcfs {
 }
 
 # ------------------------------------------------------------------------------
-# Loop through workflows & patients, pass them to generic merge function
+# Loop through workflows & groups, pass them to generic merge function
 # ------------------------------------------------------------------------------
 
-patient_ids=$("$query_dataset_script" patients "$dataset_xml")
-if [ ! "$patient_ids" ]; then
-    echo "Error - No patients found in the dataset XML file"
+group_ids=$("$query_dataset_script" groups "$dataset_xml")
+if [ ! "$group_ids" ]; then
+    echo "Error - No groups found in the dataset XML file"
     exit 1
 fi
 
-echo "Starting to merge samples by patient & patients by workflow"
+echo "Starting to merge samples by group & groups by workflow"
 mkdir -p "$workflow_vcf_dir"
 workflow_names="GATK SNPiR RVboost"
 
 for workflow_name in $workflow_names; do
     workflow_lowercase=$(echo $workflow_name | tr '[A-Z]' '[a-z]')
     sample_vcf_workflow_dir="$sample_vcf_dir/$workflow_lowercase"
-    patient_vcf_workflow_dir="$patient_vcf_dir/$workflow_lowercase"
+    group_vcf_workflow_dir="$group_vcf_dir/$workflow_lowercase"
 
     sample_vcfs=$(ls -1 $sample_vcf_workflow_dir/*.vcf)
 
@@ -151,30 +151,30 @@ for workflow_name in $workflow_names; do
         exit 1
     fi
 
-    patient_vcfs_for_workflow=""  # Clear previous workflow's list of VCFs
+    group_vcfs_for_workflow=""  # Clear previous workflow's list of VCFs
 
-    for patient_id in $patient_ids; do
-        sample_ids_for_patient=$("$query_dataset_script" samples "$patient_id" "$dataset_xml")
+    for group_id in $group_ids; do
+        sample_ids_for_group=$("$query_dataset_script" samples "$group_id" "$dataset_xml")
 
-        sample_vcfs_for_patient=""  # Clear previous patient's list of VCFs
+        sample_vcfs_for_group=""  # Clear previous group's list of VCFs
 
-        for sample_id in $sample_ids_for_patient; do
-            sample_vcfs_for_patient+=" $sample_vcf_workflow_dir/$sample_id.vcf"
+        for sample_id in $sample_ids_for_group; do
+            sample_vcfs_for_group+=" $sample_vcf_workflow_dir/$sample_id.vcf"
         done
 
-        patient_vcf="$patient_id.merged.vcf"
+        group_vcf="$group_id.merged.vcf"
 
         merge_vcfs \
-            "$sample_vcfs_for_patient" \
-            "$workflow_name Patient $patient_id" \
-            "$patient_vcf_dir/$workflow_lowercase" \
-            "$patient_vcf"
+            "$sample_vcfs_for_group" \
+            "$workflow_name Group $group_id" \
+            "$group_vcf_dir/$workflow_lowercase" \
+            "$group_vcf"
 
-        patient_vcfs_for_workflow+=" $patient_vcf_workflow_dir/$patient_vcf"
+        group_vcfs_for_workflow+=" $group_vcf_workflow_dir/$group_vcf"
     done
 
     merge_vcfs \
-        "$patient_vcfs_for_workflow" \
+        "$group_vcfs_for_workflow" \
         "$workflow_name Workflow" \
         "$workflow_vcf_dir" \
         "$workflow_lowercase.merged.vcf"
