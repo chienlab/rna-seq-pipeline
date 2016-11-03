@@ -34,15 +34,20 @@ workflow_vcf_dir="${output_dir}/vcf-per-workflow"
 ref_dir="/genomics/jchien/refs"
 
 # For STAR mapping, mapping refinement, variant calling, & SNPiR variant filtering
-ref_genome_fasta="${ref_dir}/hg19/ucsc.hg19.fasta"
-ref_genome_annotations="${ref_dir}/hg19/ucsc.hg19.annotations.gtf"
+ref_genome_fasta="${ref_dir}/ucsc.hg19.fasta"
+##ref_genome_annotations="${ref_dir}/ucsc.hg19.annotations.gtf"
 
-# For mapping refinement (indel realignment, base recalibration)
-known_mills_indel_vcf="${ref_dir}/hg19/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
-known_1kg_indel_vcf="${ref_dir}/hg19/1000G_phase1.indels.hg19.vcf"
+# For mapping refinement (indel realignment, base recalibration), variant calling,
+# and callset refinement (variant quality score recalibration)
+known_hapmap_snp_vcf="${ref_dir}/hapmap_3.3.hg19.sites.vcf"
+known_omni_snp_vcf="${ref_dir}/1000G_omni2.5.hg19.sites.vcf"
+known_1000g_snp_vcf="${ref_dir}/1000G_phase1.snps.high_confidence.hg19.sites.vcf"
+known_dbsnp_snp_vcf="${ref_dir}/dbsnp_138.hg19.vcf"
+known_1000g_indel_vcf="${ref_dir}/1000G_phase1.indels.hg19.sites.vcf"
+known_mills_indel_vcf="${ref_dir}/Mills_and_1000G_gold_standard.indels.hg19.sites.vcf"
 
-# For mapping refinement (base recalibration) & variant calling
-known_dbsnp_vcf="${ref_dir}/hg19/dbsnp_138.hg19.vcf"
+# For somatic variant calling (ContEst cross-sample contamination estimation)
+pop_frequency_vcf="/genomics/jchien/refs/hg19/hg19_population_stratified_af_hapmap_3.3.FIX.chr.vcf"
 
 #-------------------------------------------------------------------------------
 # TOOLS

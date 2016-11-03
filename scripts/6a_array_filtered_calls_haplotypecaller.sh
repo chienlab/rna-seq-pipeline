@@ -20,7 +20,7 @@ INPUT:
   Config file at <current directory>/CONFIG.sh
   BAM file(s) at <dataset_dir>/<sample dir>/refined-mapping/<sample>.refined.bam
   Reference genome at <ref_genome_fasta>
-  Known variant list at <known_dbsnp_vcf>
+  Known variant list at <known_dbsnp_snp_vcf>
 OUTPUT:
   VCF files in <output_dir>/<sample dir>/haplotypecaller"
 
@@ -35,7 +35,7 @@ fi
 source "$PBS_O_WORKDIR/CONFIG.sh"
 
 echo "Reference genome FASTA:  $ref_genome_fasta"
-echo "Known SNPs:  $known_dbsnp_vcf"
+echo "Known SNPs:  $known_dbsnp_snp_vcf"
 
 sample_dir=$(echo "$sample_dir_list" | head -$PBS_ARRAYID | tail -1)
 sample_id=$(echo "$sample_list" | head -$PBS_ARRAYID | tail -1)
@@ -60,7 +60,7 @@ echo "GATK HaplotypeCaller - Calling raw variants"
     -dontUseSoftClippedBases \
     -stand_call_conf 20.0 \
     -stand_emit_conf 20.0 \
-    --dbsnp "$known_dbsnp_vcf" \
+    --dbsnp "$known_dbsnp_snp_vcf" \
     -o "$raw_vcf" \
     -nct 12
 

@@ -21,7 +21,7 @@ INPUT:
   STAR mapping at <dataset_dir>/<sample dir>/star-pass2/<sample>.Aligned.out.bam
   Reference genome at <ref_genome_fasta>
   Known variant lists at
-    <known_mills_indel_vcf>, <known_1kg_indel_vcf>, <known_dbsnp_vcf>
+    <known_mills_indel_vcf>, <known_1000g_indel_vcf>, <known_dbsnp_snp_vcf>
 OUTPUT:
   Mapping at <output_dir>/<sample dir>/refined-mapping/<sample>.refined.bam"
 
@@ -132,7 +132,7 @@ interval_file="$output_sample_dir/realigner_target.intervals"
     -R "$ref_genome_fasta" \
     -o "$interval_file" \
     -known "$known_mills_indel_vcf" \
-    -known "$known_1kg_indel_vcf" \
+    -known "$known_1000g_indel_vcf" \
     -nt 2
 
 echo "GATK IndelRealigner - Realigning & reassigning STAR mapping quality 255 to GATK-compatible 60"
@@ -148,7 +148,7 @@ mkdir -p "$java_tmp_dir"
     -targetIntervals "$interval_file" \
     -o "$realigned_bam" \
     -known "$known_mills_indel_vcf" \
-    -known "$known_1kg_indel_vcf" \
+    -known "$known_1000g_indel_vcf" \
     --consensusDeterminationModel KNOWNS_ONLY \
     -LOD 0.4
 
@@ -164,8 +164,8 @@ recalibration_report="$output_sample_dir/recalibration_report.grp"
     -R "$ref_genome_fasta" \
     -I "$realigned_bam" \
     -knownSites "$known_mills_indel_vcf" \
-    -knownSites "$known_1kg_indel_vcf" \
-    -knownSites "$known_dbsnp_vcf" \
+    -knownSites "$known_1000g_indel_vcf" \
+    -knownSites "$known_dbsnp_snp_vcf" \
     -o "$recalibration_report" \
     -nct 6
 
@@ -177,8 +177,8 @@ post_recalibration_report="$output_sample_dir/post_recalibration_report.grp"
     -R "$ref_genome_fasta" \
     -I "$realigned_bam" \
     -knownSites "$known_mills_indel_vcf" \
-    -knownSites "$known_1kg_indel_vcf" \
-    -knownSites "$known_dbsnp_vcf" \
+    -knownSites "$known_1000g_indel_vcf" \
+    -knownSites "$known_dbsnp_snp_vcf" \
     -BQSR "$recalibration_report" \
     -o "$post_recalibration_report" \
     -nct 6
