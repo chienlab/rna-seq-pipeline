@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -l nodes=1:ppn=12,mem=32g,walltime=24:00:00
+#PBS -l nodes=1:ppn=12,mem=32g,walltime=36:00:00
 
 set -e  # Enable flag to exit when any command fails
 
