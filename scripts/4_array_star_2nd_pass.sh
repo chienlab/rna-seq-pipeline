@@ -15,7 +15,8 @@ TOOLS:
 INPUT:
   Config file at <current directory>/CONFIG.sh
   FASTQ files at <dataset_dir>/<sample dir>/<sample><fastq_file_suffix>
-  STAR reference genome index with splice junction info in <star_index_dir>
+  STAR reference genome index in <star_index_dir>
+  STAR splice junction info in <dataset_dir>/<sample dir>/star-pass1
 OUTPUT:
   Mapped reads at <output_dir>/<sample dir>/star-pass2/<sample>.Aligned.out.sam
   Expression info at <output_dir>/<sample dir>/star-pass2/<sample>.Aligned.toTranscriptome.out.bam"
@@ -67,7 +68,7 @@ pass2_dir="$output_dir/$sample_dir/star-pass2"
 echo "Output directory:  $pass2_dir"
 mkdir -p "$pass2_dir"
 
-echo "STAR - Mapping to reference genome index built with splice junction info"
+echo "STAR - Mapping to reference genome index using splice junction info from 1st pass"
 "$star" \
     --genomeDir "$star_index_dir" \
     --readFilesIn "$read_1" "$read_2" \

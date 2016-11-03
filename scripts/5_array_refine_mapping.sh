@@ -13,6 +13,7 @@ if [[ $# -gt 0 ]]; then
   This step is done once for each sample and can be run as a qsub job array.
 TOOLS:
   Java
+  SAMtools
   Picard
   GATK
 INPUT:
