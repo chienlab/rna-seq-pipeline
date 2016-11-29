@@ -8,8 +8,8 @@ if [[ $# -gt 0 ]]; then
     echo \
 "DESCRIPTION:
   Adds read groups, sorts, marks duplicates, splits reads that span splice
-  junctions, creates index, realigns around known indels & SNPs, reassigns
-  mapping qualities, and recalibrates base quality scores.
+  junctions, creates index, realigns around known indels, reassigns mapping
+  qualities, and recalibrates base quality scores.
   This step is done once for each sample and can be run as a qsub job array.
 TOOLS:
   Java
@@ -123,7 +123,7 @@ split_bai="$output_sample_dir/reads_split.bai"
 rm -f "$deduped_bam"
 rm -f "$deduped_bai"
 
-echo "GATK RealignerTargetCreator - Preparing to realign around known indels/SNPs"
+echo "GATK RealignerTargetCreator - Preparing to realign around known indels"
 interval_file="$output_sample_dir/realigner_target.intervals"
 
 "$java" \
