@@ -83,7 +83,7 @@ while (<$INPUT>) {
 		for (my $i = 0; $i < @cigarnums; $i++) {
 			#### it is now faster ####
 			if ($currentpos > $position) {
-					last;
+				last;
 			}
 			##### error corrected ####
 			if ($cigarletters[$i] =~ m/[IS]/) {
