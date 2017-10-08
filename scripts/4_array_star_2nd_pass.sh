@@ -18,7 +18,7 @@ INPUT:
   STAR reference genome index in <star_index_dir>
   STAR splice junction info in <dataset_dir>/<sample dir>/star-pass1
 OUTPUT:
-  Mapped reads at <output_dir>/<sample dir>/star-pass2/<sample>.Aligned.out.sam
+  Mapped reads at <output_dir>/<sample dir>/star-pass2/<sample>.Aligned.out.sam"
 
     # Exit with error code if unrecognized arg is given
     if [[ $1 == "--help" ]] || [[ $1 == "-h" ]]; then exit 0; else exit 1; fi
